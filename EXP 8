@@ -1,0 +1,34 @@
+8A. Traceroute command
+import java.io.BufferedReader; 
+import java.io.InputStreamReader;
+public class traceroutecmd { 
+public static void runSystemCommand(String command) { 
+try { Process p = Runtime.getRuntime().exec(command); 
+BufferedReader inputStream = new BufferedReader( new 
+InputStreamReader(p.getInputStream())); String s = ""; 
+while ((s = inputStream.readLine()) != null) System.out.println(s); } 
+catch (Exception e) { } } 
+public static void main(String[] args) {
+ // String ip = "www.google.co.in"; // String ip = "127.0.0.1"; 
+String ip = "www.drranurekha.com"; 
+runSystemCommand("tracert " + ip); } }
+
+
+8B. Ping command
+import java.io.*;
+public class ping1 { 
+public static void runSystemCommand(String Command) { 
+try{ 
+Process p=Runtime.getRuntime().exec(Command); 
+BufferedReader InputStream=new BufferedReader(new 
+InputStreamReader(p.getInputStream())); String s="vvv"; 
+while((s=InputStream.readLine())!=null) { 
+System.out.println(s); } } 
+catch(Exception e) { 
+e.printStackTrace(); } } 
+public static void main(String[]args) { 
+String Ip="localhost"; runSystemCommand("ping " +Ip); 
+java.util.Date date=new java.util.Date(); 
+System.out.println(date); } }
+
+
