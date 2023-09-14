@@ -1,0 +1,131 @@
+4. TCP SOCKET-ECHO Client & Server
+Server
+import java.io.*; 
+import java.net.*; 
+class echos {
+public static void main(String args[]) throws Exception { 
+String echoin; 
+ServerSocket svrsoc; 
+Socket soc; 
+BufferedReader br; try { 
+svrsoc = new ServerSocket(2000); 
+soc = svrsoc.accept(); 
+br = new BufferedReader (new InputStreamReader(soc.getInputStream())); 
+PrintStream ps = new PrintStream(soc.getOutputStream()); 
+System.out.println("Connected for echo:"); 
+while((echoin=br.readLine())!=null) { 
+if(echoin.equals("end")) { 
+System.out.println("Client disconnected"); 
+br.close(); 
+break; } 
+else ps.println(echoin); } } 
+catch(UnknownHostException e) { 
+System.out.println(e.toString()); } 
+catch(IOException ioe) { 
+System.out.println(ioe); } } }
+Client:
+import java.io.*; 
+import java.net.*; 
+class echoc { 
+public static void main(String args[]) throws Exception { 
+String sockin; try { 
+Socket csock = new Socket(InetAddress.getLocalHost(),2000); 
+BufferedReader br = new BufferedReader(new InputStreamReader(System.in)); 
+BufferedReader br_sock = new BufferedReader(new 
+InputStreamReader(csock.getInputStream())); PrintStream ps = new 
+PrintStream(csock.getOutputStream()); 
+System.out.println("Start echoing... type 'end' to terminate"); 
+while((sockin=br.readLine())!=null) { 
+ps.println(sockin); 
+if(sockin.equals("end")) break; 
+else System.out.println("echoed from server:"+br_sock.readLine()); } } 
+catch(UnknownHostException e) { 
+System.out.println(e.toString()); } 
+catch(IOException ioe) { System.out.println(ioe); } } } 
+
+
+4b. Creation of a Simple Chat Program
+Client program: 
+import java.io.*; 
+import java.net.*; 
+public class chatclient1 { 
+public static void main(String args[]) throws Exception { 
+Socket sk=new Socket(InetAddress.getLocalHost(),2000); 
+BufferedReader sin=new BufferedReader(new InputStreamReader(sk.getInputStream())); 
+PrintStream sout=new PrintStream(sk.getOutputStream()); 
+BufferedReader stdin=new BufferedReader(new InputStreamReader(System.in)); 
+String s; 
+while ( true ) { 
+System.out.print("Client : "); 
+s=stdin.readLine(); 
+sout.println(s); 
+s=sin.readLine(); 
+System.out.print("Server : "+s+"\n"); 
+if ( s.equalsIgnoreCase("BYE") ) break; } 
+sk.close();
+sin.close(); 
+sout.close(); 
+stdin.close(); } }
+Server program import java.net.*; 
+import java.io.*; 
+public class chatserver1 { 
+public static void main(String args[]) throws Exception { 
+ServerSocket ss=new ServerSocket(2000); Socket sk=ss.accept(); 
+BufferedReader cin=new BufferedReader(new InputStreamReader(sk.getInputStream())); 
+PrintStream cout=new PrintStream(sk.getOutputStream()); 
+BufferedReader stdin=new BufferedReader(new InputStreamReader(System.in)); 
+String s; 
+while ( true ) { s=cin.readLine(); 
+if (s.equalsIgnoreCase("END")) { 
+cout.println("BYE"); break; } 
+System. out.print("Client : "+s+"\n"); 
+System.out.print("Server : "); 
+s=stdin.readLine(); 
+cout.println(s); } 
+ss.close(); 
+sk.close(); 
+cin.close(); 
+cout.close(); 
+stdin.close(); } }
+
+
+4c.Implement FTP using TCP
+Program – Client : 
+import java.net.*; 
+import java.io.*; 
+public class FTPClient {
+ public static void main( String args[ ] ) throws Exception { 
+Socket s = new Socket(InetAddress.getLocalHost(), 4000);
+System.out.println("Enter the file name"); 
+BufferedReader keyRead = new BufferedReader(new InputStreamReader(System.in)); 
+String fname = keyRead.readLine();
+OutputStream ostream = s.getOutputStream( ); 
+PrintWriter pwrite = new PrintWriter(ostream, true); 
+pwrite.println(fname);
+InputStream istream = s.getInputStream(); 
+BufferedReader socketRead = new BufferedReader(new InputStreamReader(istream)); 
+String str; 
+while((str = socketRead.readLine()) != null) { 
+System.out.println(str); } 
+pwrite.close(); 
+socketRead.close(); 
+keyRead.close(); } }
+Program – Server : import java.io.*; 
+import java.net.*; 
+public class FTPServer { 
+public static void main(String args[]) throws Exception {
+ServerSocket ss = new ServerSocket(4000); 
+System.out.println("Server ready for connection"); 
+Socket s = ss.accept();
+System.out.println("Connection is successful and wating for chatting");
+InputStream istream = s.getInputStream( ); 
+BufferedReader fileRead=new BufferedReader(new InputStreamReader(istream)); 
+String fname = fileRead.readLine( );
+BufferedReader contentRead = new BufferedReader(new FileReader(fname) );
+OutputStream ostream = s.getOutputStream( ); 
+PrintWriter pwrite = new PrintWriter(ostream, true); 
+String str; 
+while((str = contentRead.readLine()) != null){ 
+pwrite.println(str); }
+s.close(); ss.close();
+pwrite.close(); fileRead.close(); contentRead.close(); } }
